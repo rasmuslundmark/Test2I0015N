@@ -30,7 +30,6 @@ public void readFile() {
 
 @BeforeEach
 public void setUp(){
-    readFile();
     open("https://www.ltu.se");
     try{
         if(title().isEmpty()){
