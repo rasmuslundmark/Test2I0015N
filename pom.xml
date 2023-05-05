@@ -16,12 +16,12 @@
 
     <dependencies>
 
-    <dependency>
-        <groupId>com.codeborne</groupId>
-        <artifactId>selenide</artifactId>
-        <version>6.13.0</version>
-        <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>6.13.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
