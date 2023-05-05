@@ -21,6 +21,7 @@ public class LabTest {
     public int loginCounter;
 
 
+
     @BeforeEach
     public void readFile() {
         try {
@@ -70,6 +71,7 @@ public class LabTest {
         // Registerutdrag
         $("html > body > main > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div > div > div > div > ul > li:nth-of-type(1) > a > div").click();
 
+        if (loginCounter < 1) {
         // Välj lärosäte
         $("a[class$='btn-ladok-inloggning']").click();
 
@@ -79,15 +81,16 @@ public class LabTest {
         // TRÖCK
         $("li").shouldBe(visible).click();
 
-        if (loginCounter < 1) {
+
             // Användarnamn
             $("input[id='username']").shouldBe(visible).setValue(email);
             $("input[id='password']").setValue(password);
 
             // Click
             $("input[class='btn-submit']").click();
+
+            $x("/html/body/ladok-root/ladok-cookie-banner/div/div/div/div/div/div[2]/button[1]").click();
         }
-        $x("/html/body/ladok-root/ladok-cookie-banner/div/div/div/div/div/div[2]/button[1]").click();
 
         loginCounter++;
 
@@ -106,7 +109,7 @@ public class LabTest {
     @Test
     public void createTranscript() {
 
-        $("button[aria-label='Menu']").click();
+        $x("//button[@role='button']").click();
         $("html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a").shouldBe(visible).click();
 
         // Test för att se att knappen för att skapa intyg finns
