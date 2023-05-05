@@ -6,6 +6,7 @@ import com.codeborne.selenide.conditions.Visible;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -15,12 +16,20 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
 
 public class Test {
-
 private static String email;
 private static String password;
 
+    @FindBy(css = "button[aria-label='Menu']")
+    public WebElement buttonMenu;
 
+    @FindBy(css = "html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(1) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a")
+    public WebElement linkAndCertificates;
 
+    @FindBy(css = "html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a")
+    public WebElement linkAndCertificates2;
+
+    @FindBy(css = "button[class$='btn-ladok-brand']")
+    public WebElement buttonCreate;
 
 public static void readFile(){
     try {
@@ -34,8 +43,8 @@ public static void readFile(){
             System.out.println("Error reading file, " + e.getMessage());
         }
     }
-
-public static void finalExam(){
+@BeforeEach
+public static void setUp(){
     open("https://www.ltu.se");
     try{
         if(title().isEmpty()){
@@ -86,6 +95,23 @@ public static void finalExam(){
 
 
 }
+@org.junit.Test
+public static void downloadTranscript() {
+
+    $("button[aria-label='Menu']").click();
+    $("html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a").shouldBe(visible).click();
+
+    // Test för att se att knappen för att skapa intyg finns
+    SelenideElement createTranscriptButton = $("button[class$='btn-ladok-brand']");
+
+    try {
+        createTranscriptButton.shouldBe(visible).shouldBe(enabled);
+        createTranscriptButton.click();
+    } catch (Exception e) {
+        throw new RuntimeException("Button not visible");
+    }
+
+}
 
 
 public static void loop(){
@@ -95,8 +121,9 @@ public static void loop(){
 
     public static void main(String[] args) {
         readFile();
-        finalExam();
-        loop();
+        setUp();
+        downloadTranscript();
+        //loop();
     }
 
 }
