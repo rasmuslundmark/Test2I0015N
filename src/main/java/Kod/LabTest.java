@@ -1,5 +1,6 @@
 package Kod;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +17,7 @@ import static com.codeborne.selenide.Condition.*;
 public class LabTest {
     public String email;
     public String password;
+
 
     @BeforeEach
     public void readFile() {
@@ -84,6 +86,16 @@ public class LabTest {
 
     }
     @Test
+    public void finalExam(){
+        Configuration.reportsFolder = "screenshots";
+        $x("/html/body/ladok-root/ladok-cookie-banner/div/div/div/div/div/div[2]/button[1]").click();
+        $("html > body > ladok-root > div > main > div > ladok-startsida > ladok-examinationstillfallen > ladok-examinationstillfalle-kort:nth-of-type(2) > ladok-card > div > div > div:nth-of-type(1) > ladok-visa-mer").click();
+        screenshot("final_examination");
+
+    }
+
+
+    @Test
     public void downloadTranscript() {
 
         $("button[aria-label='Menu']").click();
@@ -96,11 +108,5 @@ public class LabTest {
 
 
     }
-
-
-    public static void loop(){
-        while (true);
-    }
-
 
 }
