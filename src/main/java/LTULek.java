@@ -1,37 +1,21 @@
-package org.example;
-
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.conditions.Visible;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.junit.jupiter.api.Test;
+import static com.codeborne.selenide.Selenide.*;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
 
-public class Test {
-private static String email;
-private static String password;
+public class LTULek {
+public String email;
+public String password;
 
-    @FindBy(css = "button[aria-label='Menu']")
-    public WebElement buttonMenu;
-
-    @FindBy(css = "html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(1) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a")
-    public WebElement linkAndCertificates;
-
-    @FindBy(css = "html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a")
-    public WebElement linkAndCertificates2;
-
-    @FindBy(css = "button[class$='btn-ladok-brand']")
-    public WebElement buttonCreate;
-
-public static void readFile(){
+    @BeforeEach
+public void readFile() {
     try {
         File jsonFile = new File("C:\\temp\\Login.json");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -43,8 +27,10 @@ public static void readFile(){
             System.out.println("Error reading file, " + e.getMessage());
         }
     }
+
 @BeforeEach
-public static void setUp(){
+public void setUp(){
+    readFile();
     open("https://www.ltu.se");
     try{
         if(title().isEmpty()){
@@ -95,21 +81,17 @@ public static void setUp(){
 
 
 }
-@org.junit.Test
-public static void downloadTranscript() {
+@Test
+public void downloadTranscript() {
 
     $("button[aria-label='Menu']").click();
     $("html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a").shouldBe(visible).click();
 
     // Test för att se att knappen för att skapa intyg finns
     SelenideElement createTranscriptButton = $("button[class$='btn-ladok-brand']");
+    $(createTranscriptButton).shouldBe(visible);
+    $(createTranscriptButton).shouldBe(enabled);
 
-    try {
-        createTranscriptButton.shouldBe(visible).shouldBe(enabled);
-        createTranscriptButton.click();
-    } catch (Exception e) {
-        throw new RuntimeException("Button not visible");
-    }
 
 }
 
@@ -118,12 +100,5 @@ public static void loop(){
     while (true);
 }
 
-
-    public static void main(String[] args) {
-        readFile();
-        setUp();
-        downloadTranscript();
-        //loop();
-    }
 
 }
