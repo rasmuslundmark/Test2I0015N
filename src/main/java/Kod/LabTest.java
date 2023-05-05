@@ -1,16 +1,23 @@
 package Kod;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.OutputType;
 
 import static com.codeborne.selenide.Selenide.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.codeborne.selenide.Condition.*;
 
@@ -19,6 +26,8 @@ public class LabTest {
     public String password;
 
     public int loginCounter;
+
+
 
 
 
@@ -37,30 +46,29 @@ public class LabTest {
     }
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         open("https://www.ltu.se");
-        try{
-            if(title().isEmpty()){
+        try {
+            if (title().isEmpty()) {
                 System.out.println("Title is empty");
-            }
-            else {
+            } else {
                 System.out.println("Page loaded");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Failed to load Page: " + e.getMessage());
 
         }
-        try{
-            if($("button.CybotCookiebotDialogBodyButton").isDisplayed()){
+        try {
+            if ($("button.CybotCookiebotDialogBodyButton").isDisplayed()) {
                 $("button.CybotCookiebotDialogBodyButton").click();
                 System.out.println("Cookie accepted");
             }
 
-        } catch(ElementNotFound e) {
+        } catch (ElementNotFound e) {
             System.out.println("Element not found");
 
         }
-        if ($("button.CybotCookiebotDialogBodyButton").isDisplayed() ) {
+        if ($("button.CybotCookiebotDialogBodyButton").isDisplayed()) {
             $("button.CybotCookiebotDialogBodyButton").click();
         }
 
@@ -72,14 +80,14 @@ public class LabTest {
         $("html > body > main > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div > div > div > div > ul > li:nth-of-type(1) > a > div").click();
 
         if (loginCounter < 1) {
-        // Välj lärosäte
-        $("a[class$='btn-ladok-inloggning']").click();
+            // Välj lärosäte
+            $("a[class$='btn-ladok-inloggning']").click();
 
-        // Prompt
-        $("input[id='searchinput']").setValue("LTU").click();
+            // Prompt
+            $("input[id='searchinput']").setValue("LTU").click();
 
-        // TRÖCK
-        $("li").shouldBe(visible).click();
+            // TRÖCK
+            $("li").shouldBe(visible).click();
 
 
             // Användarnamn
@@ -96,12 +104,13 @@ public class LabTest {
 
 
     }
+
     @Test
-    public void finalExam(){
+    public void finalExam() {
         Configuration.reportsFolder = "screenshots";
-        $x("/html/body/ladok-root/ladok-cookie-banner/div/div/div/div/div/div[2]/button[1]").click();
         $("html > body > ladok-root > div > main > div > ladok-startsida > ladok-examinationstillfallen > ladok-examinationstillfalle-kort:nth-of-type(2) > ladok-card > div > div > div:nth-of-type(1) > ladok-visa-mer").click();
         screenshot("final_examination");
+
 
     }
 
@@ -121,6 +130,16 @@ public class LabTest {
         $x("//option[@value='1: Object']").click();
         $x("//*[@id='allaRegistreringarGrupperdePaProgramRadio']").click();
         $("button[class$='me-lg-3']").shouldBe(visible).click();
+
+    }
+
+
+    @Test
+    public void downloadTranscript() throws IOException, URISyntaxException {
+        Configuration.downloadsFolder = "target/files";
+        $x("//button[@role='button']").shouldBe(visible).click();
+        $x("//a[@href='/student/app/studentwebb/intyg']").shouldBe(visible).click();
+        $x("//a[@href='https://www.student.ladok.se/student/proxy/extintegration/internal/intyg/ab6a8566-eb4c-11ed-b9d5-99ac793c4cff/pdf']").click();
 
     }
 }
