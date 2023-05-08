@@ -1,25 +1,20 @@
 package Kod;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.OutputType;
-
-import static com.codeborne.selenide.Selenide.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.enabled;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.*;
 
 public class LabTest {
     public String email;
@@ -142,4 +137,37 @@ public class LabTest {
         $x("//a[@href='https://www.student.ladok.se/student/proxy/extintegration/internal/intyg/ab6a8566-eb4c-11ed-b9d5-99ac793c4cff/pdf']").click();
 
     }
+    @Test
+    // disable all BeforeEach before testing
+    public void downloadSyllabus() throws FileNotFoundException {
+        open("https://www.ltu.se");
+
+        //tar bort och klickar på Cookies
+        $("button.CybotCookiebotDialogBodyButton").isDisplayed();
+        $("button.CybotCookiebotDialogBodyButton").click();
+        $("i[class$='fa-search']").click();
+        $("input[id='cludo-search-bar-input']").setValue("I0015N").pressEnter();
+
+        $("a[data-facet='Kurser']").click();
+
+        $("a[class='courseTitle'] h2").shouldBe(visible).click();
+
+        $("html > body > main > div > div > div > div:nth-of-type(2) > div > article > div:nth-of-type(1) > section > div:nth-of-type(8) > div > a").click();
+        $("li[data-termin-kod='V23'] a").shouldBe(visible).click();
+
+
+        try {
+            Configuration.downloadsFolder = "target/files";
+            $("a.utbplan-pdf-link").download();
+            System.out.println("Download successful");
+
+        }catch (Exception e){
+            System.out.println("Failed to download syllabus");
+        }
+
+
+
+    }
+
+
 }
