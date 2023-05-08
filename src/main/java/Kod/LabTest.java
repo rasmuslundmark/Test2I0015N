@@ -5,26 +5,26 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.ex.ElementNotFound;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import static com.codeborne.selenide.Condition.enabled;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class LabTest {
+    private static final Logger logger = LoggerFactory.getLogger(LabTest.class);
     public String email;
     public String password;
 
     public int loginCounter;
-
-
-
-
 
     @BeforeEach
     public void readFile() {
@@ -35,8 +35,9 @@ public class LabTest {
 
             email = jsonNode.get("Credentials").get("email").asText();
             password = jsonNode.get("Credentials").get("password").asText();
+            logger.info("File read successfully");
         } catch (Exception e) {
-            System.out.println("Error reading file, " + e.getMessage());
+            logger.error("Error reading file, " + e.getMessage());
         }
     }
 
@@ -45,22 +46,22 @@ public class LabTest {
         open("https://www.ltu.se");
         try {
             if (title().isEmpty()) {
-                System.out.println("Title is empty");
+                logger.warn("Title is empty");
             } else {
-                System.out.println("Page loaded");
+                logger.info("Page loaded");
             }
         } catch (Exception e) {
-            System.out.println("Failed to load Page: " + e.getMessage());
+            logger.error("Failed to load Page: " + e.getMessage());
 
         }
         try {
             if ($("button.CybotCookiebotDialogBodyButton").isDisplayed()) {
                 $("button.CybotCookiebotDialogBodyButton").click();
-                System.out.println("Cookie accepted");
+                logger.info("Cookie accepted");
             }
 
         } catch (ElementNotFound e) {
-            System.out.println("Element not found");
+            logger.error("Element not found");
 
         }
         if ($("button.CybotCookiebotDialogBodyButton").isDisplayed()) {
@@ -102,11 +103,9 @@ public class LabTest {
 
     @Test
     public void finalExam() {
-        Configuration.reportsFolder = "screenshots";
-        $("html > body > ladok-root > div > main > div > ladok-startsida > ladok-examinationstillfallen > ladok-examinationstillfalle-kort:nth-of-type(2) > ladok-card > div > div > div:nth-of-type(1) > ladok-visa-mer").click();
+        Configuration.reportsFolder = "target/screenshots";
+        $("html > body > ladok-root > div > main > div > ladok-startsida > ladok-examinationstillfallen > ladok-examinationstillfalle-kort:nth-of-type(2) > ladok-card > div > div > div:nth-of-type(1) > ladok-visa-mer").shouldBe(visible).click();
         screenshot("final_examination");
-
-
     }
 
 
@@ -159,13 +158,23 @@ public class LabTest {
         try {
             Configuration.downloadsFolder = "target/files";
             $("a.utbplan-pdf-link").download();
-            System.out.println("Download successful");
+            logger.info("Download successful");
 
         }catch (Exception e){
-            System.out.println("Failed to download syllabus");
+            logger.warn("Failed to download syllabus");
         }
 
-
+    }
+    @AfterAll
+    public static void LogOut() {
+        $("button[aria-label='Meny']").shouldBe(visible).click();
+        try{
+            $("html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(3) > li > a").shouldBe(visible).click();
+            logger.info("Logged out");
+            closeWebDriver();
+        } catch(Exception e){
+            logger.warn("Failed to logout");
+        }
 
     }
 
