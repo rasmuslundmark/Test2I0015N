@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.OutputType;
 
-import static com.codeborne.selenide.Selenide.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,7 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.enabled;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.*;
 
 public class LabTest {
     public String email;
@@ -45,8 +45,13 @@ public class LabTest {
         }
     }
 
+<<<<<<< Updated upstream
     @BeforeEach
     public void setUp() {
+=======
+    @Test
+    public void setUp(){
+>>>>>>> Stashed changes
         open("https://www.ltu.se");
         try {
             if (title().isEmpty()) {
@@ -79,9 +84,15 @@ public class LabTest {
         // Registerutdrag
         $("html > body > main > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div > div > div > div > ul > li:nth-of-type(1) > a > div").click();
 
+<<<<<<< Updated upstream
         if (loginCounter < 1) {
             // Välj lärosäte
             $("a[class$='btn-ladok-inloggning']").click();
+=======
+
+        // Välj lärosäte
+        $("a[class$='btn-ladok-inloggning']").click();
+>>>>>>> Stashed changes
 
             // Prompt
             $("input[id='searchinput']").setValue("LTU").click();
@@ -121,6 +132,7 @@ public class LabTest {
         $x("//button[@role='button']").click();
         $("html > body > ladok-root > div > ladok-sido-meny > nav > div:nth-of-type(2) > ul:nth-of-type(1) > li:nth-of-type(3) > ladok-behorighetsstyrd-nav-link > a").shouldBe(visible).click();
 
+
         // Test för att se att knappen för att skapa intyg finns
         SelenideElement createTranscriptButton = $("button[class$='btn-ladok-brand']");
         $(createTranscriptButton).shouldBe(visible);
@@ -132,6 +144,30 @@ public class LabTest {
         $("button[class$='me-lg-3']").shouldBe(visible).click();
 
     }
+    @Test
+    public void downloadSyllabus() {
+        open("https://www.ltu.se");
+
+        //tar bort och klickar på Cookies
+        $("button.CybotCookiebotDialogBodyButton").isDisplayed();
+        $("button.CybotCookiebotDialogBodyButton").click();
+        $("i[class$='fa-search']").click();
+        $("input[id='cludo-search-bar-input']").setValue("I0015N").pressEnter();
+        $("a[data-facet='Kurser']").click();
+        $("a[class='courseTitle'] h2").click();
+        $("html > body > main > div > div > div > div:nth-of-type(2) > div > article > div:nth-of-type(1) > section > div:nth-of-type(8) > div > a").click();
+        $("li[data-termin-kod='V23'] a").click();
+        
+        
+
+
+
+
+
+
+
+    }
+
 
 
     @Test
