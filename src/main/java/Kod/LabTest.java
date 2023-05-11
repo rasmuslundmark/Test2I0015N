@@ -105,7 +105,15 @@ public class LabTest {
     public void finalExam() {
         Configuration.reportsFolder = "target/screenshots";
         $("html > body > ladok-root > div > main > div > ladok-startsida > ladok-examinationstillfallen > ladok-examinationstillfalle-kort:nth-of-type(2) > ladok-card > div > div > div:nth-of-type(1) > ladok-visa-mer").shouldBe(visible).click();
-        screenshot("final_examination");
+        String Date = $x("/html/body/ladok-root/div/main/div/ladok-startsida/ladok-examinationstillfallen/ladok-examinationstillfalle-kort[2]/ladok-card/div/div/div[2]/ladok-card-body-extra/div/div/ladok-examinationstillfalle-extrauppgifter/dl/dd[1]").text();
+       try{
+         if(Date.equals("2023-04-19 - 2023-05-02")){
+            screenshot("final_examination");
+            logger.info("Final examination date is correct");
+        }
+       }catch (Exception e){
+           logger.error("Final examination date is incorrect");
+       }
     }
 
 
